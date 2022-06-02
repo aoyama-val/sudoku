@@ -2,7 +2,7 @@ require_relative '../lib/sudoku.rb'
 
 describe 'Sudoku'do
   describe 'Board' do
-    let(:board) { Board.new('./data/board.txt') }
+    let(:board) { Board.load('./data/board.txt') }
 
     describe '#used_numbers_in_row' do
       it '指定された行で使われている数の配列が昇順で返る' do
@@ -40,7 +40,7 @@ describe 'Sudoku'do
       end
 
       context 'ボードが正解の状態の場合' do
-        let(:board) { Board.new('./data/solved.txt') }
+        let(:board) { Board.load('./data/solved.txt') }
         it 'trueが返る' do
           expect(board.solved?).to eq true
         end

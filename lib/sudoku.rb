@@ -1,9 +1,4 @@
 class Solver
-  # def initialize(board_filename)
-  #   @board = Board.new(board_filename)
-  #   @board.print
-  # end
-
   def solve(board)
     return if board.full?
 
@@ -43,23 +38,23 @@ class Board
   SIZE = 9
   BLOCK_SIZE = SIZE / 3
 
-  attr_accessor :data
-
-  def initialize(board_filename)
-    @data = []
-    open(board_filename) do |f|
+  def self.load(filename)
+    data = []
+    open(filename) do |f|
       f.each do |line|
-        @data += line.chomp.split('').map(&:to_i)
+        data += line.chomp.split('').map(&:to_i)
       end
     end
+    Board.new(data)
+  end
+
+  def initialize(data)
+    @data = data
     validate!
   end
 
   def clone
-    old_data = @data.clone
-    cloned = super
-    cloned.data = old_data
-    cloned
+    Board.new(@data.clone)
   end
 
   def print
@@ -134,5 +129,5 @@ class Board
 end
 
 if $0 == __FILE__
-  Solver.new.solve(Board.new('data/board.txt'))
+  Solver.new.solve(Board.load('data/board.txt'))
 end
