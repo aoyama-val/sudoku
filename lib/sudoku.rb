@@ -2,11 +2,6 @@ class Solver
   def solve(board_filename)
     @board = Board.new(board_filename)
     @board.print
-    p @board.row(0)
-    p @board.used_numbers_in_row(0)
-    p @board.column(0)
-    p @board.used_numbers_in_column(0)
-
   end
 end
 
@@ -52,6 +47,10 @@ class Board
 
   def used_numbers_in_column(i)
     column(i).reject { |x| x == BLANK }.sort.uniq
+  end
+
+  def not_used_numbers(used_numbers)
+    (1..SIZE).to_a - used_numbers
   end
 end
 
