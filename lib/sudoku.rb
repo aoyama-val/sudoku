@@ -1,5 +1,8 @@
+# 解が見つかったらtrueを返す。解無しならfalseを返す
 def solve(board)
-  return false if board.full?
+  if board.full?
+    return board.solved?
+  end
 
   (0...9).each do |j|
     (0...9).each do |i|
@@ -8,16 +11,14 @@ def solve(board)
         candidates = board.not_used_numbers(used_numbers)
         return false if candidates.empty? # 候補がなかったら解無し
         candidates.each do |num|
-          cloned = board.clone
-          cloned.put(i, j, num)
+          saved = board.at(i, j)
+          board.put(i, j, num)
           puts
-          cloned.print
-          if cloned.solved?
+          board.print
+          if solve(board)
             return true
           end
-          if solve(cloned)
-            return true
-          end
+          board.put(i, j, saved)
         end
         return false  # どの候補でも解が見つからなかったら解無し
       end
@@ -44,10 +45,6 @@ class Board
   def initialize(data)
     @data = data
     validate!
-  end
-
-  def clone
-    Board.new(@data.clone)
   end
 
   def print
