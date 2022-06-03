@@ -1,36 +1,29 @@
-class Solver
-  def solve(board)
-    return if board.full?
+def solve(board)
+  return false if board.full?
 
-    (0...9).each do |j|
-      (0...9).each do |i|
-        if board.at(i, j) == Board::BLANK
-          used_numbers = board.used_numbers_in_row(j) + board.used_numbers_in_column(i) + board.used_numbers_in_same_block(i, j)
-          candidates = board.not_used_numbers(used_numbers)
-          # print "Can put #{i}, #{j}: "
-          # p candidates
-          return false if candidates.empty?
-          candidates.each do |num|
-            cloned = board.clone
-            cloned.put(i, j, num)
-            puts
-            cloned.print
-            if cloned.solved?
-              puts
-              cloned.print
-              puts "Solved!"
-              return true
-            end
-            if solve(cloned)
-              return true
-            end
+  (0...9).each do |j|
+    (0...9).each do |i|
+      if board.at(i, j) == Board::BLANK
+        used_numbers = board.used_numbers_in_row(j) + board.used_numbers_in_column(i) + board.used_numbers_in_same_block(i, j)
+        candidates = board.not_used_numbers(used_numbers)
+        return false if candidates.empty? # 候補がなかったら解無し
+        candidates.each do |num|
+          cloned = board.clone
+          cloned.put(i, j, num)
+          puts
+          cloned.print
+          if cloned.solved?
+            return true
           end
-          return false
+          if solve(cloned)
+            return true
+          end
         end
+        return false  # どの候補でも解が見つからなかったら解無し
       end
     end
-    return false
   end
+  return false  # 到達しない。念の為
 end
 
 class Board
@@ -129,5 +122,11 @@ class Board
 end
 
 if $0 == __FILE__
-  Solver.new.solve(Board.load('data/board.txt'))
+  if solve(Board.load('data/board.txt'))
+    puts
+    puts "Solved!"
+  else
+    puts
+    puts "Solution not found."
+  end
 end
